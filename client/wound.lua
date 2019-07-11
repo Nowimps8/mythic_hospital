@@ -543,9 +543,9 @@ AddEventHandler('mythic_hospital:client:UseAdrenaline', function(tier)
 end)  
     
 Citizen.CreateThread(function()
-    local player = PlayerPedId()
-	while true do
-		if not IsEntityDead(player) and not (#injured == 0) then
+    while true do
+        local player = PlayerPedId()
+		if not IsEntityDead(player) then
 			if #injured > 0 then
 				local str = ''
 				if #injured > 1 and #injured < 3 then
@@ -565,6 +565,18 @@ Citizen.CreateThread(function()
 			end
 
 			if isBleeding > 0 then
+				if isBleeding == 1 then
+					SetFlash(0, 0, 100, 100, 100)
+				elseif isBleeding == 2 then
+					SetFlash(0, 0, 100, 250, 100)
+				elseif isBleeding == 3 then
+					SetFlash(0, 0, 100, 500, 100)
+					--Function.Call(Hash.SET_FLASH, 0, 0, 100, 500, 100);
+				elseif isBleeding == 4 then
+					SetFlash(0, 0, 100, 500, 100)
+					--Function.Call(Hash.SET_FLASH, 0, 0, 100, 500, 100);
+                end
+                
 				if blackoutTimer >= 10 then
 					exports['mythic_notify']:DoCustomHudText('inform', 'You Suddenly Black Out', 5000)
 					SetFlash(0, 0, 100, 7000, 100)
@@ -583,18 +595,7 @@ Citizen.CreateThread(function()
 					DoScreenFadeIn(500)
 					blackoutTimer = 0
 				end
-			
-				if isBleeding == 1 then
-					SetFlash(0, 0, 100, 100, 100)
-				elseif isBleeding == 2 then
-					SetFlash(0, 0, 100, 250, 100)
-				elseif isBleeding == 3 then
-					SetFlash(0, 0, 100, 500, 100)
-					--Function.Call(Hash.SET_FLASH, 0, 0, 100, 500, 100);
-				elseif isBleeding == 4 then
-					SetFlash(0, 0, 100, 500, 100)
-					--Function.Call(Hash.SET_FLASH, 0, 0, 100, 500, 100);
-				end
+
 				exports['mythic_notify']:DoCustomHudText('inform', 'You Have ' .. BleedingStates[isBleeding], 25000)
                 local bleedDamage = tonumber(isBleeding) * 4
                 ApplyDamageToPed(player, bleedDamage, false)
@@ -602,7 +603,7 @@ Citizen.CreateThread(function()
 				blackoutTimer = blackoutTimer + 1
 				advanceBleedTimer = advanceBleedTimer + 1
 			
-				if advanceBleedTimer >= 10 then
+                if advanceBleedTimer >= 10 then
 					if isBleeding < 4 then
 						isBleeding = tonumber(isBleeding) + 1
 					end
@@ -616,9 +617,9 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-    local player = PlayerPedId()
-    
     while true do
+        local player = PlayerPedId()
+        
         local ped = PlayerPedId()
         local health = GetEntityHealth(ped)
         local armour = GetPedArmour(ped)
