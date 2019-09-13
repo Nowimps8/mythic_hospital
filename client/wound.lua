@@ -95,7 +95,7 @@ function ProcessRunStuff(ped)
         if wasOnPainKillers then
             SetPedToRagdoll(ped, 1500, 2000, 3, true, true, false)
             wasOnPainKillers = false
-            exports['mythic_notify']:DoCustomHudText('inform', 'You\'ve Realized Doing Drugs Does Not Fix All Your Problems', 5000)
+            exports['mythic_notify']:SendAlert('inform', 'You\'ve Realized Doing Drugs Does Not Fix All Your Problems', 5000, { ['background-color'] = '#760036' })
         end
     else
         SetPedMoveRateOverride(ped, 1.0)
@@ -118,13 +118,13 @@ function ProcessDamage(ped)
                         local chance = math.random(100)
                         if (IsPedRunning(ped) or IsPedSprinting(ped)) then
                             if chance <= Config.LegInjuryChance.Running then
-                                exports['mythic_notify']:DoCustomHudText('inform', 'You\'re Having A Hard Time Running', 5000)
+                                exports['mythic_notify']:SendAlert('inform', 'You\'re Having A Hard Time Running', 5000, { ['background-color'] = '#760036' })
                                 ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08) -- change this float to increase/decrease camera shake
                                 SetPedToRagdollWithFall(ped, 1500, 2000, 1, GetEntityForwardVector(ped), 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
                             end
                         else
                             if chance <= Config.LegInjuryChance.Walking then
-                                exports['mythic_notify']:DoCustomHudText('inform', 'You\'re Having A Hard Using Your Legs', 5000)
+                                exports['mythic_notify']:SendAlert('inform', 'You\'re Having A Hard Using Your Legs', 5000, { ['background-color'] = '#760036' })
                                 ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08) -- change this float to increase/decrease camera shake
                                 SetPedToRagdollWithFall(ped, 1500, 2000, 1, GetEntityForwardVector(ped), 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
                             end
@@ -181,9 +181,9 @@ function ProcessDamage(ped)
                     local chance = math.random(100)
 
                     if chance <= Config.HeadInjuryChance then
-                        exports['mythic_notify']:DoCustomHudText('inform', 'You Suddenly Black Out', 5000)
+                        exports['mythic_notify']:SendAlert('inform', 'You Suddenly Black Out', 5000, { ['background-color'] = '#760036' })
                         SetFlash(0, 0, 100, 10000, 100)
-                        
+
                         DoScreenFadeOut(100)
                         while not IsScreenFadedOut() do
                             Citizen.Wait(0)
@@ -207,7 +207,7 @@ function ProcessDamage(ped)
         if wasOnDrugs then
             SetPedToRagdoll(ped, 1500, 2000, 3, true, true, false)
             wasOnDrugs = false
-            exports['mythic_notify']:DoCustomHudText('inform', 'You\'ve Realized Doing Drugs Does Not Fix All Your Problems', 5000)
+            exports['mythic_notify']:SendAlert('inform', 'You\'ve Realized Doing Drugs Does Not Fix All Your Problems', 5000, { ['background-color'] = '#760036' })
         end
     else
         onDrugs = onDrugs - 1
@@ -225,7 +225,7 @@ function CheckDamage(ped, bone, weapon)
         if not BodyParts[Config.Bones[bone]].isDamaged then
             BodyParts[Config.Bones[bone]].isDamaged = true
             BodyParts[Config.Bones[bone]].severity = 1
-            --exports['mythic_notify']:DoHudText('inform', 'Your ' .. BodyParts[Config.Bones[bone]].label .. ' feels ' .. Config.WoundStates[BodyParts[Config.Bones[bone]].severity])
+            --exports['mythic_notify']:SendAlert('inform', 'Your ' .. BodyParts[Config.Bones[bone]].label .. ' feels ' .. Config.WoundStates[BodyParts[Config.Bones[bone]].severity], { ['background-color'] = '#760036' })
             if weapon == Config.WeaponClasses['SMALL_CALIBER'] or weapon == Config.WeaponClasses['MEDIUM_CALIBER'] or weapon == Config.WeaponClasses['CUTTING'] or weapon == Config.WeaponClasses['WILDLIFE'] or weapon == Config.WeaponClasses['OTHER'] or weapon == Config.WeaponClasses['LIGHT_IMPACT'] then
                 if (Config.Bones[bone] == 'UPPER_BODY' or Config.Bones[bone] == 'LOWER_BODY' or Config.Bones[bone] == 'SPINE') and (weapon == Config.WeaponClasses['SMALL_CALIBER'] or weapon == Config.WeaponClasses['MEDIUM_CALIBER']) then
                     if GetPedArmour(ped) > 0 then
@@ -237,7 +237,7 @@ function CheckDamage(ped, bone, weapon)
                         if Config.Bones[bone] == 'SPINE' then
                             SetPedToRagdoll(ped, 1500, 2000, 2, true, true, false)
                         end
-    
+
                         ApplyBleed(1)
                     end
                 else
@@ -294,7 +294,7 @@ function CheckDamage(ped, bone, weapon)
                         if Config.Bones[bone] == 'SPINE' then
                             SetPedToRagdoll(ped, 1500, 2000, 2, true, true, false)
                         end
-    
+
                         ApplyBleed(1)
                     end
                 else
@@ -318,7 +318,7 @@ function CheckDamage(ped, bone, weapon)
                         if Config.Bones[bone] == 'SPINE' then
                             SetPedToRagdoll(PlayerPedId(), 1500, 2000, 3, true, true, false)
                         end
-    
+
                         ApplyBleed(2)
                     end
                 else
@@ -376,22 +376,22 @@ function DoLimbAlert()
             else
                 limbDamageMsg = 'Your ' .. injured[1].label .. ' feels ' .. Config.WoundStates[injured[1].severity]
             end
-    
-            exports['mythic_notify']:PersistentHudText('start', limbNotifId, 'inform', limbDamageMsg, { ['background-color'] = '#4d0e96' })
+
+            exports['mythic_notify']:PersistentAlert('start', limbNotifId, 'inform', limbDamageMsg, { ['background-color'] = '#760036' })
         else
-            exports['mythic_notify']:PersistentHudText('end', limbNotifId)
+            exports['mythic_notify']:PersistentAlert('end', limbNotifId)
         end
     else
-        exports['mythic_notify']:PersistentHudText('end', limbNotifId)
+        exports['mythic_notify']:PersistentAlert('end', limbNotifId)
     end
 end
 
 function DoBleedAlert()
     local player = PlayerPedId()
     if not IsEntityDead(player) and isBleeding > 0 then
-        exports['mythic_notify']:PersistentHudText('start', bleedNotifId, 'inform', 'You Have ' .. Config.BleedingStates[isBleeding], { ['background-color'] = '#4d0e96' })
+        exports['mythic_notify']:PersistentAlert('start', bleedNotifId, 'inform', 'You Have ' .. Config.BleedingStates[isBleeding], { ['background-color'] = '#760036' })
     else
-        exports['mythic_notify']:PersistentHudText('end', bleedNotifId)
+        exports['mythic_notify']:PersistentAlert('end', bleedNotifId)
     end
 end
 
@@ -413,7 +413,7 @@ AddEventHandler('mythic_hospital:client:FieldTreatLimbs', function()
             v.severity = BodyParts[Config.Bones[bone]].severity
         end
     end
-    
+
     TriggerServerEvent('mythic_hospital:server:SyncInjuries', {
         limbs = BodyParts,
         isBleeding = tonumber(isBleeding)
@@ -426,7 +426,7 @@ RegisterNetEvent('mythic_hospital:client:FieldTreatBleed')
 AddEventHandler('mythic_hospital:client:FieldTreatBleed', function()
     if isBleeding > 1 then
         isBleeding = tonumber(isBleeding) - 1
-    
+
         TriggerServerEvent('mythic_hospital:server:SyncInjuries', {
             limbs = BodyParts,
             isBleeding = tonumber(isBleeding)
@@ -441,7 +441,7 @@ RegisterNetEvent('mythic_hospital:client:ReduceBleed')
 AddEventHandler('mythic_hospital:client:ReduceBleed', function()
     if isBleeding > 0 then
         isBleeding = tonumber(isBleeding) - 1
-    
+
         TriggerServerEvent('mythic_hospital:server:SyncInjuries', {
             limbs = BodyParts,
             isBleeding = tonumber(isBleeding)
@@ -460,7 +460,7 @@ AddEventHandler('mythic_hospital:client:ResetLimbs', function()
         v.severity = 0
     end
     injured = {}
-    
+
     TriggerServerEvent('mythic_hospital:server:SyncInjuries', {
         limbs = BodyParts,
         isBleeding = tonumber(isBleeding)
@@ -473,7 +473,7 @@ end)
 RegisterNetEvent('mythic_hospital:client:RemoveBleed')
 AddEventHandler('mythic_hospital:client:RemoveBleed', function()
     isBleeding = 0
-    
+
     TriggerServerEvent('mythic_hospital:server:SyncInjuries', {
         limbs = BodyParts,
         isBleeding = tonumber(isBleeding)
@@ -501,10 +501,11 @@ AddEventHandler('mythic_hospital:client:UseAdrenaline', function(tier)
 
     exports['mythic_notify']:DoCustomHudText('inform', 'You\'re Able To Ignore Your Body Failing', 5000)
     ProcessRunStuff(PlayerPedId())
-end)  
+end)
 
 local prevPos = nil
 Citizen.CreateThread(function()
+    Citizen.Wait(2500)
     prevPos = GetEntityCoords(PlayerPedId(), true)
     while true do
         local player = PlayerPedId()
@@ -522,22 +523,22 @@ Citizen.CreateThread(function()
                         SetFlash(0, 0, 100, 500, 100)
                         --Function.Call(Hash.SET_FLASH, 0, 0, 100, 500, 100);
                     end
-                    
+
                     if fadeOutTimer % Config.FadeOutTimer == 0 then
                         if blackoutTimer >= Config.BlackoutTimer then
                             exports['mythic_notify']:DoCustomHudText('inform', 'You Suddenly Black Out', 5000)
                             SetFlash(0, 0, 100, 7000, 100)
-                                
+
                             DoScreenFadeOut(500)
                             while not IsScreenFadedOut() do
                                 Citizen.Wait(0)
                             end
-                    
+
                             if not IsPedRagdoll(player) and IsPedOnFoot(player) and not IsPedSwimming(player) then
                                 ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.08) -- change this float to increase/decrease camera shake
                                 SetPedToRagdollWithFall(PlayerPedId(), 7500, 9000, 1, GetEntityForwardVector(player), 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
                             end
-                    
+
                             Citizen.Wait(1500)
                             DoScreenFadeIn(1000)
                             blackoutTimer = 0
@@ -577,12 +578,12 @@ Citizen.CreateThread(function()
                 local currPos = GetEntityCoords(player, true)
                 local moving = #(vector2(prevPos.x, prevPos.y) - vector2(currPos.x, currPos.y))
                 if (moving > 1 and not IsPedInAnyVehicle(player)) and isBleeding > 2 then
-                    exports['mythic_notify']:PersistentHudText('start', bleedMoveNotifId, 'inform', 'You notice blood oozing from your wounds faster when you\'re moving', { ['background-color'] = '#4d0e96' })
+                    exports['mythic_notify']:PersistentAlert('start', bleedMoveNotifId, 'inform', 'You notice blood oozing from your wounds faster when you\'re moving', { ['background-color'] = '#4d0e96' })
                     advanceBleedTimer = advanceBleedTimer + Config.BleedMovementAdvance
                     bleedTickTimer = bleedTickTimer + Config.BleedMovementTick
                     prevPos = currPos
                 else
-                    exports['mythic_notify']:PersistentHudText('end', bleedMoveNotifId)
+                    exports['mythic_notify']:PersistentAlert('end', bleedMoveNotifId)
                     advanceBleedTimer = advanceBleedTimer + 1
                     bleedTickTimer = bleedTickTimer + 1
                 end
@@ -593,8 +594,8 @@ Citizen.CreateThread(function()
             bleedTickTimer = bleedTickTimer + 1
         end
 
-		Citizen.Wait(1000)
-	end
+        Citizen.Wait(1000)
+    end
 end)
 
 Citizen.CreateThread(function()
@@ -613,7 +614,7 @@ Citizen.CreateThread(function()
 
         local armorDamaged = (playerArmor ~= armor and armor < (playerArmor - Config.ArmorDamage) and armor > 0) -- Players armor was damaged
         local healthDamaged = (playerHealth ~= health and health < (playerHealth - Config.HealthDamage)) -- Players health was damaged
-        
+
         if armorDamaged or healthDamaged then
             local hit, bone = GetPedLastDamageBone(ped)
             local bodypart = Config.Bones[bone]
@@ -637,9 +638,9 @@ Citizen.CreateThread(function()
         playerArmor = armor
         Citizen.Wait(500)
 
-		ProcessDamage(ped)
-		Citizen.Wait(500)
-	end
+        ProcessDamage(ped)
+        Citizen.Wait(500)
+    end
 end)
 
 --[[ Player Died Events ]]--
