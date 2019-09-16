@@ -86,7 +86,6 @@ AddEventHandler('mythic_hospital:server:EnteredBed', function()
 	TriggerClientEvent('esx:showNotification', src, '~w~You Were Billed For ~r~$' .. totalBill .. ' ~w~For Medical Services & Expenses')
 	TriggerClientEvent('mythic_hospital:client:FinishServices', src)
 end)
-end)
 
 RegisterServerEvent('mythic_hospital:server:LeaveBed')
 AddEventHandler('mythic_hospital:server:LeaveBed', function(id)
