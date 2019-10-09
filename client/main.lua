@@ -24,7 +24,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
 function PrintHelpText(message)
     SetTextComponentFormat("STRING")
     AddTextComponentString(message)
@@ -136,7 +135,16 @@ end)
 
 RegisterNetEvent('mythic_hospital:client:FinishServices')
 AddEventHandler('mythic_hospital:client:FinishServices', function()
-    SetEntityHealth(PlayerPedId(), GetEntityMaxHealth(PlayerPedId()))
+	local player = PlayerPedId()
+	
+	if IsPedDeadOrDying(player) then
+		local playerPos = GetEntityCoords(player, true)
+		NetworkResurrectLocalPlayer(playerPos, true, true, false)
+	end
+	
+	SetEntityHealth(player, GetEntityMaxHealth(player))
+    ClearPedBloodDamage(player)
+    SetPlayerSprint(PlayerId(), true)
     TriggerEvent('mythic_hospital:client:RemoveBleed')
     TriggerEvent('mythic_hospital:client:ResetLimbs')
     exports['mythic_notify']:DoHudText('inform', 'You\'ve Been Treated & Billed')
@@ -159,8 +167,8 @@ Citizen.CreateThread(function()
             if not IsPedInAnyVehicle(PlayerPedId(), true) then
                 if distance < 3 then
                     --PrintHelpText('Press ~INPUT_CONTEXT~ ~s~to check in')
-                    ESX.Game.Utils.DrawText3D(vector3(hospitalCheckin.x, hospitalCheckin.y, hospitalCheckin.z + 0.5), '[E] Check in', 0.4)                        
-                    if IsControlJustReleased(0, 54) then
+                    ESX.Game.Utils.DrawText3D(vector3(hospitalCheckin.x, hospitalCheckin.y, hospitalCheckin.z + 0.5), '[E] Check in', 0.4)
+					if IsControlJustReleased(0, 54) then
                         if (GetEntityHealth(PlayerPedId()) < 200) or (IsInjuredOrBleeding()) then
                             exports['mythic_progbar']:Progress({
                                 name = "hospital_action",
