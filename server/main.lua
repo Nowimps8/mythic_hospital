@@ -25,6 +25,12 @@ AddEventHandler('playerDropped', function()
     end
 end)
 
+AddEventHandler('playerDropped', function()
+    if bedsTaken[source] ~= nil then
+        beds[bedsTaken[source]].taken = false
+    end
+end)
+
 RegisterServerEvent('mythic_hospital:server:RequestBed')
 AddEventHandler('mythic_hospital:server:RequestBed', function()
     for k, v in pairs(beds) do
@@ -81,10 +87,10 @@ AddEventHandler('mythic_hospital:server:EnteredBed', function()
     end
 
     -- YOU NEED TO IMPLEMENT YOUR FRAMEWORKS BILLING HERE
-    	local xPlayer = ESX.GetPlayerFromId(src)
+	local xPlayer = ESX.GetPlayerFromId(src)
 	xPlayer.removeBank(totalBill)
 	TriggerClientEvent('esx:showNotification', src, '~w~You Were Billed For ~r~$' .. totalBill .. ' ~w~For Medical Services & Expenses')
-	TriggerClientEvent('mythic_hospital:client:FinishServices', src)
+    TriggerClientEvent('mythic_hospital:client:FinishServices', src)
 end)
 
 RegisterServerEvent('mythic_hospital:server:LeaveBed')
