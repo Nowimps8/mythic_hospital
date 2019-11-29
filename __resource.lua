@@ -45,6 +45,8 @@ server_scripts {
 	'server/hospital/hospital/events.lua',
 	'server/hospital/hidden/events.lua',
 	'server/hospital/hidden/threads.lua',
+
+	'server/items.lua',
 }
 
 dependencies {
