@@ -51,10 +51,10 @@ AddEventHandler("mythic_hospital:items:bandage", function(item)
         }
     }, function(status)
         if not status then
-			local maxHealth = GetEntityMaxHealth(PlayerPedId())
-			local health = GetEntityHealth(PlayerPedId())
-			local newHealth = math.min(maxHealth, math.floor(health + maxHealth / 16))
-			SetEntityHealth(PlayerPedId(), newHealth)
+            local maxHealth = GetEntityMaxHealth(PlayerPedId())
+            local health = GetEntityHealth(PlayerPedId())
+            local newHealth = math.min(maxHealth, math.floor(health + maxHealth / 16))
+            SetEntityHealth(PlayerPedId(), newHealth)
         end
     end)
 end)
@@ -83,10 +83,10 @@ AddEventHandler("mythic_hospital:items:firstaid", function(item)
         },
     }, function(status)
         if not status then
-			local maxHealth = GetEntityMaxHealth(PlayerPedId())
-			local health = GetEntityHealth(PlayerPedId())
-			local newHealth = math.min(maxHealth, math.floor(health + maxHealth / 8))
-			SetEntityHealth(PlayerPedId(), newHealth)
+            local maxHealth = GetEntityMaxHealth(PlayerPedId())
+            local health = GetEntityHealth(PlayerPedId())
+            local newHealth = math.min(maxHealth, math.floor(health + maxHealth / 8))
+            SetEntityHealth(PlayerPedId(), newHealth)
         end
     end)
 end)
@@ -115,7 +115,7 @@ AddEventHandler("mythic_hospital:items:medkit", function(item)
         },
     }, function(status)
         if not status then
-			SetEntityHealth(PlayerPedId(), GetEntityMaxHealth(PlayerPedId()))
+            SetEntityHealth(PlayerPedId(), GetEntityMaxHealth(PlayerPedId()))
             TriggerEvent('mythic_hospital:client:FieldTreatLimbs')
         end
     end)

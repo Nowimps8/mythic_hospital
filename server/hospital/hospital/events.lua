@@ -14,16 +14,6 @@ local beds = {
 }
 
 local bedsTaken = {}
-local injuryBasePrice = 100
-ESX             = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
-AddEventHandler('playerDropped', function()
-    if bedsTaken[source] ~= nil then
-        beds[bedsTaken[source]].taken = false
-    end
-end)
 
 AddEventHandler('playerDropped', function()
     if bedsTaken[source] ~= nil then
@@ -57,40 +47,29 @@ AddEventHandler('mythic_hospital:server:RPRequestBed', function(plyCoords)
                 TriggerClientEvent('mythic_hospital:client:RPSendToBed', source, k, v)
                 return
             else
-                TriggerClientEvent('esx:showNotification', source, '~r~That Bed Is Taken')
+                TriggerEvent('chatMessage', '', { 0, 0, 0 }, 'NThat Bed Is Taken')
             end
         end
     end
 
     if not foundbed then
-        TriggerClientEvent('esx:showNotification', source, '~r~Not Near A Hospital Bed')
+        TriggerEvent('chatMessage', '', { 0, 0, 0 }, 'Not Near A Hospital Bed')
     end
 end)
 
 RegisterServerEvent('mythic_hospital:server:EnteredBed')
 AddEventHandler('mythic_hospital:server:EnteredBed', function()
     local src = source
-    local injuries = GetCharsInjuries(src)
+    local totalBill = CalculateBill(GetCharsInjuries(src), Config.InjuryBase)
 
-    local totalBill = injuryBasePrice
-
-    if injuries ~= nil then
-        for k, v in pairs(injuries.limbs) do
-            if v.isDamaged then
-                totalBill = totalBill + (injuryBasePrice * v.severity)
-            end
-        end
-
-        if injuries.isBleeding > 0 then
-            totalBill = totalBill + (injuryBasePrice * injuries.isBleeding)
-        end
+    
+    if BillPlayer(src, totalBill) then
+        TriggerClientEvent('mythic_notify:client:SendAlert', src, { text = 'You\'ve Been Treated & Billed', type = 'inform', style = { ['background-color'] = '#760036' }})
+        TriggerClientEvent('mythic_hospital:client:FinishServices', src, false, true)
+    else
+        TriggerClientEvent('mythic_notify:client:SendAlert', src, { text = 'You were revived, but did not have the funds to cover further medical services', type = 'inform', style = { ['background-color'] = '#760036' }})
+        TriggerClientEvent('mythic_hospital:client:FinishServices', src, false, false)
     end
-
-    -- YOU NEED TO IMPLEMENT YOUR FRAMEWORKS BILLING HERE
-	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.removeBank(totalBill)
-	TriggerClientEvent('esx:showNotification', src, '~w~You Were Billed For ~r~$' .. totalBill .. ' ~w~For Medical Services & Expenses')
-    TriggerClientEvent('mythic_hospital:client:FinishServices', src)
 end)
 
 RegisterServerEvent('mythic_hospital:server:LeaveBed')
